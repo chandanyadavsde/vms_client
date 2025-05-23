@@ -36,28 +36,60 @@ const LoginPage = () => {
     navigate("/dashboard");
   };
 
-  const handleGetOtp = e => {
+  const handleGetOtp = async e => {
     e.preventDefault();
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       return setError("Please enter a valid email address");
     }
     setIsLoading(true);
-    setTimeout(() => {
-      setShowOtp(true);
+    try {
+      const response = await fetch("https://5e60-27-107-57-214.ngrok-free.app/vms/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ identifier: email })
+      });
+      const result = await response.json();
+      if (!result.success) {
+        setError(result.message);
+      } else {
+        setShowOtp(true);
+        setError("");
+      }
+    } catch (err) {
+      setError("Failed to connect to server");
+    } finally {
       setIsLoading(false);
-      setError("");
-    }, 1000);
+    }
   };
 
-  const handleUserLogin = e => {
+  const handleUserLogin = async e => {
     e.preventDefault();
     if (!otp.match(/^\d{6}$/)) {
       return setError("Please enter a valid 6-digit OTP");
     }
     setIsLoading(true);
-    setTimeout(() => {
-      finishLogin(email.split("@")[0]);
-    }, 1000);
+    try {
+      const response = await fetch("http://localhost:3000/vms/otpverify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ identifier: email, otp })
+      });
+      const result = await response.json();
+      if (!result.success) {
+        setError(result.message);
+      } else {
+        localStorage.setItem("token", result.token);
+        finishLogin(result.user.name);
+      }
+    } catch (err) {
+      setError("Server error. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAdminLogin = e => {
@@ -77,7 +109,6 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row p-2">
-      {/* Left side */}
       <div className="hidden md:block md:w-1/2 relative overflow-hidden rounded-xl">
         <img
           src={truck}
@@ -95,7 +126,6 @@ const LoginPage = () => {
         />
       </div>
 
-      {/* Right side */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-6 bg-white">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
