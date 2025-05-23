@@ -1,71 +1,62 @@
-import React, { useState, useEffect } from 'react';
+import React from "react";
 
-const AdminLoginForm = ({ onSuccess }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    setError('');
-  }, [email, password]);
-
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!validateEmail(email)) {
-      setError('Please enter a valid email address');
-      return;
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-    setIsLoading(true);
-    setTimeout(() => {
-      onSuccess();
-      setIsLoading(false);
-    }, 1000);
-  };
-
+const AdminLoginForm = ({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  isLoading,
+  error,
+  onLogin,
+}) => {
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={onLogin} className="space-y-4">
       <div>
-        <label htmlFor="admin-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-        <input
-          id="admin-email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          disabled={isLoading}
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
-        />
+        <label htmlFor="admin-email" className="block text-sm font-medium text-gray-700 mb-1">
+          Email
+        </label>
+        <div className="relative">
+          <input
+            id="admin-email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200 text-sm"
+            disabled={isLoading}
+          />
+          <i className="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+        </div>
       </div>
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-        <input
-          id="password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter your password"
-          disabled={isLoading}
-          className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
-        />
+        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+          Password
+        </label>
+        <div className="relative">
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-200 text-sm"
+            disabled={isLoading}
+          />
+          <i className="fas fa-lock absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+        </div>
       </div>
-      {error && <div className="text-red-500 text-sm animate-fadeIn">{error}</div>}
+      {error && (
+        <div className="text-red-500 text-sm animate-fadeIn">
+          <i className="fas fa-exclamation-circle mr-1"></i> {error}
+        </div>
+      )}
       <button
         type="submit"
         disabled={isLoading}
-        className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-medium transition duration-200"
+        className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-medium transition duration-200 transform hover:scale-[1.02] active:scale-[0.98] !rounded-button whitespace-nowrap cursor-pointer"
       >
-        {isLoading ? 'Loading...' : 'Login'}
+        {isLoading ? <i className="fas fa-circle-notch fa-spin mr-2"></i> : "Login"}
       </button>
-      <div className="mt-6 text-center">
-        <a href="#" className="text-sm text-orange-500 hover:text-orange-600">Forgot password?</a>
-      </div>
     </form>
   );
 };
