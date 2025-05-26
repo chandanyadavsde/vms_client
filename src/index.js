@@ -7,6 +7,7 @@ import "./index.css"; // your Tailwind setup
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <App />
+    <App/>
   </BrowserRouter>
+
 );

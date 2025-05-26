@@ -4,18 +4,18 @@ import { useNavigate } from "react-router-dom";
 import ToggleSwitch from "../components/ToggleSwitch";
 import UserLoginForm from "../components/UserLoginForm";
 import AdminLoginForm from "../components/AdminLoginForm";
-import truck from "../images/truck.svg"
-import warehouse from "../images/warehouse.jpg"
+import truck from "../images/truck.svg";
+import warehouse from "../images/warehouse.jpg";
 
 const LoginPage = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
-  const [showOtp, setShowOtp] = useState(false);
+  const [isAdmin, setIsAdmin]     = useState(false);
+  const [email, setEmail]         = useState("");
+  const [password, setPassword]   = useState("");
+  const [otp, setOtp]             = useState("");
+  const [showOtp, setShowOtp]     = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [error, setError]         = useState("");
+  const navigate                  = useNavigate();
 
   const resetForm = () => {
     setShowOtp(false);
@@ -30,13 +30,13 @@ const LoginPage = () => {
     resetForm();
   };
 
-  const finishLogin = name => {
+  const finishLogin = (name) => {
     localStorage.setItem("loggedIn", "true");
     localStorage.setItem("userName", name);
-    navigate("/dashboard");
+    navigate("/AdminDashboard");
   };
 
-  const handleGetOtp = async e => {
+  const handleGetOtp = async (e) => {
     e.preventDefault();
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       return setError("Please enter a valid email address");
@@ -46,9 +46,9 @@ const LoginPage = () => {
       const response = await fetch("https://5e60-27-107-57-214.ngrok-free.app/vms/login", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ identifier: email })
+        body: JSON.stringify({ identifier: email }),
       });
       const result = await response.json();
       if (!result.success) {
@@ -64,7 +64,7 @@ const LoginPage = () => {
     }
   };
 
-  const handleUserLogin = async e => {
+  const handleUserLogin = async (e) => {
     e.preventDefault();
     if (!otp.match(/^\d{6}$/)) {
       return setError("Please enter a valid 6-digit OTP");
@@ -74,9 +74,9 @@ const LoginPage = () => {
       const response = await fetch("http://localhost:3000/vms/otpverify", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ identifier: email, otp })
+        body: JSON.stringify({ identifier: email, otp }),
       });
       const result = await response.json();
       if (!result.success) {
@@ -92,15 +92,39 @@ const LoginPage = () => {
     }
   };
 
-  const handleAdminLogin = e => {
+  // ✅ UPDATED: Admin login handler (API call + validation)
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
+
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      return setError("Please enter a valid email address");
+    }
+
     if (password.length < 6) {
       return setError("Password must be at least 6 characters");
     }
+
     setIsLoading(true);
-    setTimeout(() => {
-      finishLogin("Admin");
-    }, 1000);
+    try {
+      const response = await fetch("http://localhost:3000/vms/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const result = await response.json();
+
+      if (!result.success) {
+        setError(result.message || "Login failed");
+      } else {
+        localStorage.setItem("token", result.token);
+        finishLogin(result.user.name);
+      }
+    } catch (err) {
+      setError("Unable to connect. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -133,10 +157,11 @@ const LoginPage = () => {
             <p className="text-gray-500 mt-2">Smart logistics solutions for your business</p>
           </div>
 
-          <ToggleSwitch isAdmin={isAdmin} onToggle={handleToggle} />
+          {/* You can re-enable ToggleSwitch if needed */}
+          {/* <ToggleSwitch isAdmin={isAdmin} onToggle={handleToggle} /> */}
 
           <div className="form-content transition-all duration-300">
-            {isAdmin ? (
+            {/* {isAdmin ? ( */}
               <AdminLoginForm
                 email={email}
                 setEmail={setEmail}
@@ -146,8 +171,8 @@ const LoginPage = () => {
                 error={error}
                 onLogin={handleAdminLogin}
               />
-            ) : (
-              <UserLoginForm
+            {/* ) : ( */}
+              {/* <UserLoginForm
                 email={email}
                 setEmail={setEmail}
                 otp={otp}
@@ -158,7 +183,8 @@ const LoginPage = () => {
                 onGetOtp={handleGetOtp}
                 onVerifyOtp={handleUserLogin}
               />
-            )}
+            )} */}
+
             <div className="mt-6 text-center">
               <a href="#" className="text-sm text-orange-500 hover:text-orange-600">
                 Forgot password?
