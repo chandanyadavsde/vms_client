@@ -1,5 +1,5 @@
 import {React,useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 const AddUserPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ firstName: "", middleName: "", lastName: "", role: "Manager", phone: "", email: "", location: "Pune" });
@@ -19,12 +19,11 @@ const AddUserPage = () => {
     <main className="flex-1 overflow-y-auto p-6 bg-white">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Add User</h1>
-        <button
-          onClick={() => navigate("/")}
-          className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 px-4 rounded-md flex items-center whitespace-nowrap"
-        >
-          <i className="fas fa-arrow-left mr-2"></i>Back
-        </button>
+       
+        <Link to="/admindashboard/add-user"></Link>
+        
+        
+       
       </div>
       {/* form fields same as before... */}
       <div className="flex justify-end gap-4 mt-8">

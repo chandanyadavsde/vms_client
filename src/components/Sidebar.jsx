@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTachometerAlt } from '@fortawesome/free-solid-svg-icons'
 
 export default function Sidebar() {
   return (
@@ -13,13 +15,19 @@ export default function Sidebar() {
       <nav className="flex-1 overflow-y-auto py-4">
         <ul>
           <li className="px-5 py-3">
-            <Link to="/" className="flex items-center text-gray-300 hover:text-white">
+            <Link to="/admindashboard" className="flex items-center text-gray-300 hover:text-white">
+                <FontAwesomeIcon icon={faTachometerAlt} className="mr-3" />
+             <span>Dashboard</span> 
+            </Link>
+          </li>
+          <li className="px-5 py-3">
+            <Link to="/admindashboard/usermanagement" className="flex items-center text-gray-300 hover:text-white">
               <i className="fas fa-users mr-3"></i>
               User Management
             </Link>
           </li>
           <li className="px-5 py-3">
-            <Link to="/add-user" className="flex items-center text-gray-300 hover:text-white">
+            <Link to="/admindashboard/add-user" className="flex items-center text-gray-300 hover:text-white">
               <i className="fas fa-user-plus mr-3"></i>
               Add User
             </Link>

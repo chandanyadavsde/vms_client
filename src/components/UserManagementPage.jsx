@@ -38,7 +38,7 @@ const UserManagementPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">User Management</h1>
         <Link
-          to="/add-user"
+          to="/admindashboard/add-user"
           className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md flex items-center whitespace-nowrap"
         >
           <i className="fas fa-plus mr-2"></i>Add User
