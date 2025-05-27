@@ -6,7 +6,7 @@ import NotFound from "./pages/NotFound";
 import PrivateRoute from "./components/PrivateRoute";
 import DashboardLayout from "./components/DashboardLayout";
 import UserManagementPage from "./components/UserManagementPage";
-import AddUserPage from "./components/AddUserPage";
+import AddUserPage from "./pages/AddUserPage";
 import Dashboard from "./pages/Dashboard";
 
 export default function App() {
